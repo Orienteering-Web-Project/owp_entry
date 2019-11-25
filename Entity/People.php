@@ -6,7 +6,6 @@ use Doctrine\ORM\Mapping as ORM;
 use Owp\OwpCore\Model as OwpCoreModel;
 use Owp\OwpEvent\Model as OwpEventTrait;
 use Owp\OwpCore\Entity\Base;
-use Owp\OwpEvent\Entity\Event;
 
 /**
  * @ORM\Entity

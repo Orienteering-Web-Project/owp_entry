@@ -6,7 +6,6 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Owp\OwpCore\Model as OwpCoreModel;
 use Owp\OwpEvent\Model as OwpEventTrait;
-use Owp\OwpEvent\Entity\Event;
 
 /**
  * @ORM\Entity(repositoryClass="Owp\OwpEntry\Repository\TeamRepository")

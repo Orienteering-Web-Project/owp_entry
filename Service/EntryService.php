@@ -13,6 +13,7 @@ use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Security\Core\Security;
 use Knp\Bundle\SnappyBundle\Snappy\Response\PdfResponse;
+use Symfony\Component\Translation\Exception\NotFoundResourceException;
 use Twig\Environment;
 use Knp\Snappy\Pdf;
 
@@ -84,6 +85,8 @@ class EntryService {
             case self::EXPORT_PDF:
                 return $this->exportPDF($event);
         }
+
+        return new NotFoundResourceException();
     }
 
     public function save($entry)

@@ -2,9 +2,6 @@
 
 namespace Owp\OwpEntry\DependencyInjection;
 
-use Knp\Menu\ItemInterface;
-use Knp\Menu\Matcher\Voter\VoterInterface;
-use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
