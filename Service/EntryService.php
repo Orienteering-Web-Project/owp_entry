@@ -7,6 +7,7 @@ use Owp\OwpEntry\Entity\Team;
 use Owp\OwpEntry\Entity\People;
 use Owp\OwpCore\Entity\User;
 use Owp\OwpEntry\Form\TeamType;
+use Owp\OwpEntry\Form\PeopleType;
 use Symfony\Component\HttpFoundation\Request;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\FormFactoryInterface;
@@ -38,14 +39,14 @@ class EntryService {
         $this->pdf = $pdf;
     }
 
-    public function form(Request $request, Event $event)
+    public function getForm(Request $request, Event $event)
     {
-        /*if ($event->getNumberPeopleByEntries() === 1) {
-            //$formFactory->create();
+        if ($event->getNumberPeopleByEntries() === 1) {
+            $form = $this->formFactory->create(PeopleType::class, $this->values($event));
         }
-        else {*/
+        else {
             $form = $this->formFactory->create(TeamType::class, $this->values($event));
-        //}
+        }
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {

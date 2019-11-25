@@ -10,7 +10,8 @@
         }
     ],
     "require": {
-        "owp/owp-core": "*"
+        "owp/owp-core": "*",
+        "owp/owp-event": "*"
     },
     "config": {
         "optimize-autoloader": true
