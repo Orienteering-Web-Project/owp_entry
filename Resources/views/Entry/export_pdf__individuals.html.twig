@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+    <head>
+
+    </head>
+    <body>
+        <h1 class="text-primary">{{ event.title }}</h1>
+
+        {% set club = '' %}
+
+        {% for people in event.peoples|sort((a, b) => a.club <=> b.club) %}
+            {{ people.club }}
+        {% endfor %}
+    </body>
+</html>
