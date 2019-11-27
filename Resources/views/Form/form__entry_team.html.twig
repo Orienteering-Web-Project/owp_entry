@@ -1,0 +1,63 @@
+{% extends '@OwpCore/content.html.twig' %}
+
+{% block title %}{{ event.title }}{% endblock %}
+
+{% block content_header %}
+    <img class="first-slide opacity-20" src="{{ asset('images/default.jpg') | imagine_filter('carousel_header') }}" alt="First slide">
+    <div class="container">
+        <div class="carousel-caption text-left content-header col-12 col-lg-10 offset-lg-1">
+            <h1 class="display-2 d-inline-block"><span class="badge badge-primary">{{ event.dateBegin|date('d') }}</span></h1>
+            <h3 class="display-4 d-inline-block"><span class="badge">{{ event.dateBegin|date('F')|trans|upper }}</span></h3>
+            <h3 class="display-4 d-inline-block"><span class="badge text-primary">{{ event.dateBegin|date('Y') }}</span></h3>
+            <h1>Inscription - {{ event.title }}</h1>
+            <div class="my-4">
+                <a href="{{ path('owp_event_show', {'slug': event.slug}) }}" class="btn btn-primary">Retourner sur la page de l'évènement</a>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block content_body %}
+    <div class="row my-4 mx-0 mx-lg-4">
+        <div class="col-12 col-lg-10 offset-lg-1">
+            {{ _self.breadcrumb([{'label':event.title, 'url': path('owp_event_show', {'slug': event.slug}), 'class': ''},{'label':'Inscription', 'url': '#', 'class': 'active'}])}}
+        </div>
+
+        <div class="col-12 col-lg-10 offset-lg-1">
+            {{ form_start(form, {'attr': {'id': 'form_entry'}}) }}
+                <div class="form-group">
+                    <h4 class="font-weight-bold">Equipe #1</h4>
+                    <div class="form-group">
+                        <label>Nom d'équipe</label>
+                        {{ form_widget(form.label, {'attr': {'class': 'form-control'}}) }}
+                    </div>
+                    {% for people in form.peoples %}
+                        <div class="form-group">
+                            <h5>Equipier #{{ '1.' ~ loop.index }}</h5>
+                            <h6>Licencié</h6>
+                            <div class="form-group">
+                                <label>Rechercher un licencié dans l'archive fédéral</label>
+                                {{ form_widget(people.base, {'attr': {'class': 'form-control'}}) }}
+                            </div>
+                            <h6>Non licencié</h6>
+                            <div class="form-group">
+                                <label>Prénom</label>
+                                {{ form_widget(people.firstName, {'attr': {'class': 'form-control'}}) }}
+                            </div>
+                            <div class="form-group">
+                                <label>Nom</label>
+                                {{ form_widget(people.lastName, {'attr': {'class': 'form-control'}}) }}
+                            </div>
+                            <div class="form-group">
+                                <label>Commentaire</label>
+                                {{ form_widget(people.comment, {'attr': {'class': 'form-control'}}) }}
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+                <button type="submit" class="btn btn-primary" form="form_entry">Enregistrer l'inscription</button>
+                <a class="btn btn-link text-muted" href="{{ path('owp_event_show', {'slug':event.slug}) }}">Annuler</a>
+            {{ form_end(form) }}
+        </div>
+    </div>
+{% endblock %}

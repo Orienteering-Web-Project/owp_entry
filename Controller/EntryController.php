@@ -2,31 +2,84 @@
 
 namespace Owp\OwpEntry\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Owp\OwpEntry\Entity\Team;
 use Owp\OwpEntry\Entity\People;
 use Owp\OwpEvent\Entity\Event;
+use Owp\OwpCore\Entity\Club;
 use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Owp\OwpEntry\Service\EntryService;
+use Owp\OwpEvent\Service\EventService;
+use Owp\OwpCore\Service\ClubService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 
-class EntryController extends AbstractController
+class EntryController extends Controller
 {
-    /**
-     * @Route("/entry/quick/{id}", name="owp_entry_quick", requirements={"page"="\d+"})
-     * @IsGranted("ROLE_USER")
-     * @ParamConverter("event")
-     */
-    public function quick(Event $event, EntryService $entryService): Response
+    public function entryQuick(string $slug, EventService $eventService, EntryService $entryService): Response
     {
+        $event = $eventService->get($slug);
         $entryService->save($this->getUser()->getPeople($event));
 
         return $this->redirectToRoute('owp_event_show', array(
             'slug' => $event->getSlug(),
         ));
+    }
+
+    public function entryOpen(Request $request, string $slug, EventService $eventService, EntryService $entryService): Response
+    {
+        $event = $eventService->get($slug);
+
+        $form = $entryService->getForm($request, 'open', $event);
+        if (!$form) {
+            return $this->redirectToRoute('owp_event_show', array(
+                'slug' => $event->getSlug(),
+            ));
+        }
+
+        return $this->render('@OwpEntry/Form/form__entry_open.html.twig', [
+            'form' => $form->createView(),
+            'event' => $event
+        ]);
+    }
+
+    public function entryTeam(Request $request, string $slug, Club $club, EventService $eventService, EntryService $entryService): Response
+    {
+        $event = $eventService->get($slug);
+
+        $form = $entryService->getForm($request, 'team', $event);
+        if (!$form) {
+            return $this->redirectToRoute('owp_event_show', array(
+                'slug' => $event->getSlug(),
+            ));
+        }
+
+        return $this->render('@OwpEntry/Form/form__entry_team.html.twig', [
+            'form' => $form->createView(),
+            'event' => $event
+        ]);
+    }
+
+    public function entryClub(Request $request, string $slug, string $club, EventService $eventService, EntryService $entryService, ClubService $clubService): Response
+    {
+        $event = $eventService->get($slug);
+        $club = $clubService->get($club);
+
+        $form = $entryService->getForm($request, 'club', $event, $club);
+        if (!$form) {
+            return $this->redirectToRoute('owp_event_show', array(
+                'slug' => $event->getSlug(),
+            ));
+        }
+
+        return $this->render('@OwpEntry/Form/form__entry_club.html.twig', [
+            'form' => $form->createView(),
+            'event' => $event,
+            'current_club' => $club,
+            'clubs' => $clubService->getBy()
+        ]);
     }
 
     /**
@@ -81,11 +134,10 @@ class EntryController extends AbstractController
         ));
     }
 
-    /**
-     * @Route("/entry/{id}/export/{format}", name="owp_entry_export", requirements={"page"="\d+"})
-     */
-    public function export(Event $event, $format, EntryService $entryService): Response
+    public function export(string $slug, $format, EventService $eventService, EntryService $entryService): Response
     {
+        $event = $eventService->get($slug);
+
         return $entryService->export($event, $format);
     }
 }

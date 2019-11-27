@@ -6,19 +6,26 @@ use Owp\OwpEvent\Entity\Event;
 use Owp\OwpEntry\Entity\Team;
 use Owp\OwpEntry\Entity\People;
 use Owp\OwpCore\Entity\User;
+use Owp\OwpCore\Entity\Club;
 use Owp\OwpEntry\Form\TeamType;
 use Owp\OwpEntry\Form\PeopleType;
+use Owp\OwpEntry\Form\ClubType;
 use Symfony\Component\HttpFoundation\Request;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Security\Core\Security;
 use Knp\Bundle\SnappyBundle\Snappy\Response\PdfResponse;
-use Symfony\Component\Translation\Exception\NotFoundResourceException;
+use Symfony\Component\Routing\Exception\RouteNotFoundException;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Twig\Environment;
 use Knp\Snappy\Pdf;
 
 class EntryService {
+
+    const REGISTER_OPEN = 'open';
+    const REGISTER_TEAM = 'team';
+    const REGISTER_CLUB = 'club';
 
     const EXPORT_PDF = 'pdf';
 
@@ -39,28 +46,86 @@ class EntryService {
         $this->pdf = $pdf;
     }
 
-    public function getForm(Request $request, Event $event)
+    public function getForm(Request $request, string $mode, Event $event, Club $club = null)
     {
-        if ($event->getNumberPeopleByEntries() === 1) {
-            $form = $this->formFactory->create(PeopleType::class, $this->values($event));
+        if (!$this->security->isGranted('register_' . $mode, $event)) {
+            throw new AccessDeniedException();
         }
-        else {
-            $form = $this->formFactory->create(TeamType::class, $this->values($event));
+
+        switch($mode)
+        {
+            case self::REGISTER_OPEN:
+                return $this->getFormOpen($request, $event);
+            case self::REGISTER_TEAM:
+                return $this->getFormTeam($request, $event);
+            case self::REGISTER_CLUB:
+                return $this->getFormClub($request, $event, $club);
         }
+
+        throw new RouteNotFoundException();
+    }
+
+    private function getFormOpen(Request $request, Event $event)
+    {
+          $form = $this->formFactory->create(PeopleType::class, new People());
+
+          $form->handleRequest($request);
+          if ($form->isSubmitted() && $form->isValid()) {
+              $entity = $form->getData();
+              $this->save($entity);
+
+              return NULL;
+          }
+
+          return $form;
+    }
+
+    private function getFormClub(Request $request, Event $event, Club $club)
+    {
+        $form = $this->formFactory->create(ClubType::class, [], [
+            'club' => $club ? $club->getId() : $_ENV['CLUB']]
+        );
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $entity = $form->getData();
+            $entries = $form->getData();
 
-            $this->save($entity);
+            foreach ($entries as $entry) {
+                $people = new People();
+                $people
+                    ->setEvent($event)
+                    ->setBase($entry->current())
+                ;
+                $this->save($people);
+            }
+
+            return NULL;
         }
 
         return $form;
     }
 
-    public function update()
+    private function getFormTeam(Request $request, Event $event)
     {
-        $this->session->getFlashBag()->add('danger', 'Vous n\'êtes pas autorisé à modifier cette inscription.');
+        $team = new Team();
+        $team->setEvent($event);
+        for ($i = 0; $i < $event->getNumberPeopleByEntries(); $i++) {
+            $people = new People();
+            $people->setPosition($i + 1);
+            $team->addPeople($people);
+        }
+
+        $form = $this->formFactory->create(TeamType::class, $team);
+
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entity = $form->getData();
+            $this->save($entity);
+
+            return NULL;
+        }
+
+        return $form;
     }
 
     public function delete($entry)
@@ -87,7 +152,7 @@ class EntryService {
                 return $this->exportPDF($event);
         }
 
-        return new NotFoundResourceException();
+        return new RouteNotFoundException();
     }
 
     public function save($entry)
@@ -99,35 +164,11 @@ class EntryService {
             $this->em->persist($entry);
             $this->em->flush();
 
-            $this->session->getFlashBag()->add('primary', 'Vous êtes maintenant inscrit à cet événement.');
+            $this->session->getFlashBag()->add('primary', 'L\'inscription a été prise en compte.');
         }
         else {
             $this->session->getFlashBag()->add('danger', 'Vous n\'êtes pas autorisé à vous inscrire à cet événement.');
         }
-    }
-
-    private function values(Event $event, User $user = null): Team
-    {
-        $team = new Team();
-        $team->setEvent($event);
-
-        for ($i = 0; $i < $event->getNumberPeopleByEntries(); $i++) {
-            $people = new People();
-            $people->setPosition($i + 1);
-            $team->addPeople($people);
-
-            if (!empty($user) && !empty($user->getBase())) {
-                $people->setBase($user->getBase());
-            }
-            elseif (!empty($user)) {
-                $people->setFirstName($user->getFirstName());
-                $people->setLastName($user->getLastName());
-
-                $this->session->getFlashBag()->add('warning', 'Vous vous êtes inscrit en tant que non licencié. Si vous êtes licencié, veuillez renseigner votre n° de licence dans votre compte et modifier votre inscription.');
-            }
-        }
-
-        return $team;
     }
 
     private function exportPDF(Event $event)

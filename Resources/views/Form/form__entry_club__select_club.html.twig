@@ -1,0 +1,11 @@
+<div class="d-none d-lg-inline-flex dropdown show">
+    <a class="btn btn-lg btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        {{ current_club.id ~ ' - ' ~ current_club.label }}
+    </a>
+
+    <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+        {% for club in clubs %}
+            <a class="dropdown-item" href="{{ path('owp_entry_club', {'slug': event.slug, 'club': club.id}) }}">{{ club.id ~ ' - ' ~ club.label }}</a>
+        {% endfor %}
+    </div>
+</div>

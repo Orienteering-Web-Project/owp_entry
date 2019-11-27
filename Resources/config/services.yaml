@@ -12,3 +12,11 @@ services:
     service.entry:
         class: Owp\OwpEntry\Service\EntryService
         public: true
+
+    service.people:
+        class: Owp\OwpEntry\Service\PeopleService
+        public: true
+
+    service.team:
+        class: Owp\OwpEntry\Service\TeamService
+        public: true
