@@ -1,5 +1,14 @@
 {% extends '@OwpCore/content.html.twig' %}
 
+{% block stylesheets %}
+    {{ parent() }}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('entry') }}
+{% endblock %}
+
 {% block title %}{{ event.title }}{% endblock %}
 
 {% block content_header %}
@@ -51,7 +60,10 @@
         <div class="row position-sticky fixed-bottom bg-white border-top border-primary mx-0 my-4">
             <div class="col-12 col-lg-10 offset-lg-1 p-4 my-lg-4">
                 <div class="d-inline-flex">
-                    <button type="submit" class="btn btn-lg btn-primary" form="form_entry">Enregistrer l'inscription</button>
+                    <button type="submit" class="btn btn-lg btn-primary" form="form_entry" disabled>Enregistrer l'inscription</button>
+                    <div id="number-entries" class="p-2 text-muted">
+                        <span>0</span> personne(s) sélectionnée(s)
+                    </div>
                 </div>
             </div>
         </div>
