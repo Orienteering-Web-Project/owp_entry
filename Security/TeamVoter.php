@@ -37,31 +37,31 @@ class TeamVoter extends Voter
 
     protected function voteOnAttribute($attribute, $team, TokenInterface $token)
     {
+        switch ($attribute) {
+            case self::DELETE:
+                return $this->canDelete($team, $token);
+            case self::UPDATE:
+                return $this->canUpdate($team, $token);
+            case self::ADD:
+                return $this->canAdd($team, $token);
+        }
+
+        throw new \LogicException('This code should not be reached!');
+    }
+
+    private function canAdd(Team $team, TokenInterface $token)
+    {
+        return $this->security->isGranted('register', $team->getEvent());
+    }
+
+    private function canDelete(Team $team, TokenInterface $token)
+    {
         $user = $token->getUser();
 
         if (!$user instanceof User) {
             return false;
         }
 
-        switch ($attribute) {
-            case self::DELETE:
-                return $this->canDelete($team, $user);
-            case self::UPDATE:
-                return $this->canUpdate($team, $user);
-            case self::ADD:
-                return $this->canAdd($team, $user);
-        }
-
-        throw new \LogicException('This code should not be reached!');
-    }
-
-    private function canAdd(Team $team, User $user)
-    {
-        return $this->security->isGranted('register', $team->getEvent());
-    }
-
-    private function canDelete(Team $team, User $user)
-    {
         if($this->security->isGranted('ROLE_ADMIN')) {
             return true;
         }
@@ -77,8 +77,14 @@ class TeamVoter extends Voter
         return false;
     }
 
-    private function canUpdate(Team $team, User $user)
+    private function canUpdate(Team $team, TokenInterface $token)
     {
+        $user = $token->getUser();
+
+        if (!$user instanceof User) {
+            return false;
+        }
+
         if($this->security->isGranted('ROLE_ADMIN')) {
             return true;
         }

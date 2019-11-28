@@ -42,6 +42,7 @@ abstract class AbstractEntryManager
     public function getForm(Event $event, array $options = [])
     {
         $options['event'] = $event->getId();
+
         return $this->formFactory->create($this->getFormClass(), $this->getFormData($event), $this->getFormOptions($options));
     }
 

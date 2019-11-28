@@ -42,11 +42,14 @@ class PeopleType extends AbstractType
             ->add('comment', TextType::class, [
                 'required' => false,
             ])
-            ->setAction($this->router->generate('owp_entry_add_submit', [
+        ;
+
+        if (!empty($options['event']) ) {
+            $builder->setAction($this->router->generate('owp_entry_add_submit', [
                 'event' => $options['event'],
                 'mode' => 'open'
-            ]))
-        ;
+            ]));
+        }
 
     }
 

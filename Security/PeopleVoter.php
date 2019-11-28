@@ -37,12 +37,6 @@ class PeopleVoter extends Voter
 
     protected function voteOnAttribute($attribute, $people, TokenInterface $token)
     {
-        $user = $token->getUser();
-
-        if (!$user instanceof User) {
-            return false;
-        }
-
         switch ($attribute) {
             case self::DELETE:
                 return $this->canDelete($people, $user);
@@ -55,7 +49,7 @@ class PeopleVoter extends Voter
         throw new \LogicException('This code should not be reached!');
     }
 
-    private function canAdd(People $people, User $user)
+    private function canAdd(People $people, $user)
     {
         if (!empty($people->getBase())) {
             foreach ($people->getEvent()->getPeoples() as $p) {
@@ -68,8 +62,12 @@ class PeopleVoter extends Voter
         return $this->security->isGranted('register', $people->getEvent());
     }
 
-    private function canDelete(People $people, User $user)
+    private function canDelete(People $people, $user)
     {
+        if (!$user instanceof User) {
+            return false;
+        }
+
         if ($this->security->isGranted('ROLE_ADMIN')) {
             return true;
         }
@@ -85,8 +83,12 @@ class PeopleVoter extends Voter
         return false;
     }
 
-    private function canUpdate(People $people, User $user)
+    private function canUpdate(People $people, $user)
     {
+        if (!$user instanceof User) {
+            return false;
+        }
+
         if ($this->security->isGranted('ROLE_ADMIN')) {
             return true;
         }

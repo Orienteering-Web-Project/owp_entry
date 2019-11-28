@@ -44,6 +44,7 @@ class TeamEntryManager extends AbstractEntryManager
         $team->setEvent($event);
         for ($i = 0; $i < $event->getNumberPeopleByEntries(); $i++) {
             $people = new People();
+            $people->setEvent($event);
             $people->setPosition($i + 1);
             $team->addPeople($people);
         }
