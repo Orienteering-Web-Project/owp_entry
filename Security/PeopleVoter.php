@@ -37,6 +37,8 @@ class PeopleVoter extends Voter
 
     protected function voteOnAttribute($attribute, $people, TokenInterface $token)
     {
+        $user = $token->getUser();
+
         switch ($attribute) {
             case self::DELETE:
                 return $this->canDelete($people, $user);
