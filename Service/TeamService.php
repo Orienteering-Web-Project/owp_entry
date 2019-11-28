@@ -6,8 +6,8 @@ use Owp\OwpEvent\Entity\Event;
 use Owp\OwpEntry\Entity\Team;
 use Owp\OwpEntry\Entity\People;
 use Owp\OwpCore\Entity\User;
-use Owp\OwpEntry\Form\TeamType;
-use Owp\OwpEntry\Form\PeopleAddType;
+use Owp\OwpEntry\Form\TeamAddType;
+use Owp\OwpEntry\Form\TeamUpdateType;
 use Symfony\Component\HttpFoundation\Request;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\FormFactoryInterface;
@@ -64,8 +64,24 @@ class TeamService {
         }
     }
 
-    public function update(Team $team)
+    public function update(Request $request, Team $team)
     {
+        if (!$this->security->isGranted('update', $team)) {
+            throw new AccessDeniedException();
+        }
 
+        $form = $this->formFactory->create(TeamUpdateType::class, $team);
+
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $team = $form->getData();
+
+            $this->em->persist($team);
+            $this->em->flush();
+
+            $this->session->getFlashBag()->add('primary', 'L\'inscription a été prise en compte.');
+        }
+
+        return $form;
     }
 }

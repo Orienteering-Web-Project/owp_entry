@@ -6,7 +6,7 @@ use Owp\OwpEvent\Entity\Event;
 use Owp\OwpEntry\Entity\Team;
 use Owp\OwpEntry\Entity\People;
 use Owp\OwpCore\Entity\User;
-use Owp\OwpEntry\Form\TeamType;
+use Owp\OwpEntry\Form\TeamAddType;
 use Owp\OwpEntry\Form\PeopleAddType;
 use Owp\OwpEntry\Form\PeopleUpdateType;
 use Symfony\Component\HttpFoundation\Request;
@@ -75,6 +75,8 @@ class PeopleService {
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
+            $people = $form->getData();
+
             $this->em->persist($people);
             $this->em->flush();
 

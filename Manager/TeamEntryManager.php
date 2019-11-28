@@ -7,7 +7,7 @@ use Owp\OwpEntry\Entity\Team;
 use Owp\OwpEntry\Entity\People;
 use Owp\OwpCore\Entity\User;
 use Owp\OwpCore\Entity\Club;
-use Owp\OwpEntry\Form\TeamType;
+use Owp\OwpEntry\Form\TeamAddType;
 use Owp\OwpEntry\Form\PeopleAddType;
 use Owp\OwpEntry\Form\ClubType;
 use Symfony\Component\HttpFoundation\Request;
@@ -35,7 +35,7 @@ class TeamEntryManager extends AbstractEntryManager
 
     protected function getFormClass()
     {
-        return TeamType::class;
+        return TeamAddType::class;
     }
 
     protected function getFormData(Event $event)

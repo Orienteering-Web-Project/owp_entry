@@ -7,16 +7,18 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Owp\OwpEntry\Entity\Team;
 use Owp\OwpEntry\Service\TeamService;
+use Symfony\Component\HttpFoundation\Request;
 
 class TeamController extends Controller
 {
-    public function update(Team $team, TeamService $teamService): Response
+    public function update(Request $request, Team $team, TeamService $teamService): Response
     {
-        $teamService->update($people);
+        $form = $teamService->update($request, $team);
 
-        return $this->redirectToRoute('owp_event_show', array(
-            'slug' => $people->getEvent()->getSlug(),
-        ));
+        return $this->render('@OwpEntry/Form/form__team_update.html.twig', [
+            'form' => $form->createView(),
+            'team' => $team
+        ]);
     }
 
     public function delete(Team $people, TeamService $teamService): Response

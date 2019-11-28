@@ -10,7 +10,7 @@ use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
-class TeamType extends AbstractType
+class TeamAddType extends AbstractType
 {
     private $router;
 
