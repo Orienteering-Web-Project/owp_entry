@@ -8,9 +8,17 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class TeamType extends AbstractType
 {
+    private $router;
+
+    public function __construct(UrlGeneratorInterface $router)
+    {
+        $this->router = $router;
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
@@ -22,6 +30,10 @@ class TeamType extends AbstractType
             ->add('label', TextType::class, [
                 'required' => false,
             ])
+            ->setAction($this->router->generate('owp_entry_add_submit', [
+                'event' => $options['event'],
+                'mode' => 'team'
+            ]))
         ;
     }
 
@@ -29,6 +41,8 @@ class TeamType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Team::class,
+            'club' => $_ENV['CLUB'],
+            'event' => null
         ]);
     }
 }

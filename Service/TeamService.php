@@ -38,6 +38,19 @@ class TeamService {
         $this->pdf = $pdf;
     }
 
+    public function add(Team $team)
+    {
+        if ($this->security->isGranted('add', $team)) {
+            $this->em->persist($team);
+            $this->em->flush();
+
+            $this->session->getFlashBag()->add('primary', 'L\'inscription a été prise en compte.');
+        }
+        else {
+            $this->session->getFlashBag()->add('danger', 'Vous n\'êtes pas autorisé à vous inscrire à cet événement.');
+        }
+    }
+
     public function delete(Team $team)
     {
         if ($this->security->isGranted('delete', $team)) {

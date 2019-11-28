@@ -20,3 +20,15 @@ services:
     service.team:
         class: Owp\OwpEntry\Service\TeamService
         public: true
+
+    manager.entry.open:
+        class: Owp\OwpEntry\Manager\OpenEntryManager
+        public: true
+
+    manager.entry.club:
+        class: Owp\OwpEntry\Manager\ClubEntryManager
+        public: true
+
+    manager.entry.team:
+        class: Owp\OwpEntry\Manager\TeamEntryManager
+        public: true

@@ -6,6 +6,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Owp\OwpEntry\Entity\People;
+use Owp\OwpEvent\Entity\Event;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Owp\OwpEntry\Service\EntryService;
 use Owp\OwpEvent\Service\EventService;

@@ -28,58 +28,33 @@ class EntryController extends Controller
         ));
     }
 
-    public function entryOpen(Request $request, string $slug, EventService $eventService, EntryService $entryService): Response
+    public function form(string $slug, string $mode, string $option)
     {
-        $event = $eventService->get($slug);
-
-        $form = $entryService->getForm($request, 'open', $event);
-        if (!$form) {
-            return $this->redirectToRoute('owp_event_show', array(
-                'slug' => $event->getSlug(),
-            ));
+        if (!$this->has('manager.entry.' . $mode)) {
+            $this->createNotFoundException();
         }
 
-        return $this->render('@OwpEntry/Form/form__entry_open.html.twig', [
-            'form' => $form->createView(),
-            'event' => $event
-        ]);
-    }
+        $event = $this->get('service.event')->get($slug);
+        $club = $this->get('service.club')->get($option);
 
-    public function entryTeam(Request $request, string $slug, Club $club, EventService $eventService, EntryService $entryService): Response
-    {
-        $event = $eventService->get($slug);
+        $form = $this->get('manager.entry.' . $mode)->getForm($event, ['club' => $club]);
 
-        $form = $entryService->getForm($request, 'team', $event);
-        if (!$form) {
-            return $this->redirectToRoute('owp_event_show', array(
-                'slug' => $event->getSlug(),
-            ));
-        }
-
-        return $this->render('@OwpEntry/Form/form__entry_team.html.twig', [
-            'form' => $form->createView(),
-            'event' => $event
-        ]);
-    }
-
-    public function entryClub(Request $request, string $slug, string $club, EventService $eventService, EntryService $entryService, ClubService $clubService): Response
-    {
-        $event = $eventService->get($slug);
-        $club = $clubService->get($club);
-
-        $form = $entryService->getForm($request, 'club', $event, $club);
-        if (!$form) {
-            return $this->redirectToRoute('owp_event_show', array(
-                'slug' => $event->getSlug(),
-            ));
-        }
-
-        return $this->render('@OwpEntry/Form/form__entry_club.html.twig', [
+        return $this->render('@OwpEntry/Form/form__entry_' . $mode .'.html.twig', [
             'form' => $form->createView(),
             'event' => $event,
-            'current_club' => $club,
-            'clubs' => $clubService->getBy()
+            'option' => $this->get('service.club')->get($option),
+            'clubs' => $this->get('service.club')->getBy()
         ]);
+    }
+
+    public function submit(Request $request, string $mode, Event $event, string $option)
+    {
+        $club = $this->get('service.club')->get($option);
+        $this->get('manager.entry.' . $mode)->validate($request, $event, ['club' => $club]);
+
+        return $this->redirectToRoute('owp_event_show', array(
+            'slug' => $event->getSlug(),
+        ));
     }
 
     /**

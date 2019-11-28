@@ -65,62 +65,15 @@ class EntryService {
         throw new RouteNotFoundException();
     }
 
-    private function getFormOpen(Request $request, Event $event)
-    {
-          $form = $this->formFactory->create(PeopleType::class, new People());
-
-          $form->handleRequest($request);
-          if ($form->isSubmitted() && $form->isValid()) {
-              $entity = $form->getData();
-              $this->save($entity);
-
-              return NULL;
-          }
-
-          return $form;
-    }
-
     private function getFormClub(Request $request, Event $event, Club $club)
     {
         $form = $this->formFactory->create(ClubType::class, [], [
-            'club' => $club ? $club->getId() : $_ENV['CLUB']]
-        );
+            'club' => $club ? $club->getId() : $_ENV['CLUB']
+        ]);
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $entries = $form->getData();
 
-            foreach ($entries as $entry) {
-                $people = new People();
-                $people
-                    ->setEvent($event)
-                    ->setBase($entry->current())
-                ;
-                $this->save($people);
-            }
-
-            return NULL;
-        }
-
-        return $form;
-    }
-
-    private function getFormTeam(Request $request, Event $event)
-    {
-        $team = new Team();
-        $team->setEvent($event);
-        for ($i = 0; $i < $event->getNumberPeopleByEntries(); $i++) {
-            $people = new People();
-            $people->setPosition($i + 1);
-            $team->addPeople($people);
-        }
-
-        $form = $this->formFactory->create(TeamType::class, $team);
-
-        $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entity = $form->getData();
-            $this->save($entity);
 
             return NULL;
         }
@@ -153,22 +106,6 @@ class EntryService {
         }
 
         return new RouteNotFoundException();
-    }
-
-    public function save($entry)
-    {
-        if (!($entry instanceof Team) && !($entry instanceof People)) {
-            $this->session->getFlashBag()->add('danger', 'Une erreur inattendue est survenue.');
-        }
-        elseif ($this->security->isGranted('add', $entry)) {
-            $this->em->persist($entry);
-            $this->em->flush();
-
-            $this->session->getFlashBag()->add('primary', 'L\'inscription a été prise en compte.');
-        }
-        else {
-            $this->session->getFlashBag()->add('danger', 'Vous n\'êtes pas autorisé à vous inscrire à cet événement.');
-        }
     }
 
     private function exportPDF(Event $event)

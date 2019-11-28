@@ -3,15 +3,15 @@
     <route id="owp_entry_quick" path="/event/{slug}/entry/quick">
         <default key="_controller">Owp\OwpEntry\Controller\EntryController::entryQuick</default>
     </route>
-    <route id="owp_entry_open" path="/event/{slug}/entry/open">
-        <default key="_controller">Owp\OwpEntry\Controller\EntryController::entryOpen</default>
+    <route id="owp_entry_add_form" path="/event/{slug}/entry/{mode}/{option}">
+        <default key="_controller">Owp\OwpEntry\Controller\EntryController::form</default>
+        <default key="mode">open|club|team</default>
+        <default key="option"></default>
     </route>
-    <route id="owp_entry_club" path="/event/{slug}/entry/club/{club}">
-        <default key="_controller">Owp\OwpEntry\Controller\EntryController::entryClub</default>
-        <default key="club"></default>
-    </route>
-    <route id="owp_entry_team" path="/event/{slug}/entry/team">
-        <default key="_controller">Owp\OwpEntry\Controller\EntryController::entryTeam</default>
+    <route id="owp_entry_add_submit" path="/entry/{event}/{mode}/{option}">
+        <default key="_controller">Owp\OwpEntry\Controller\EntryController::submit</default>
+        <default key="mode">open|club|team</default>
+        <default key="option"></default>
     </route>
     <route id="owp_entry_export" path="/event/{slug}/export/{format}">
         <default key="_controller">Owp\OwpEntry\Controller\EntryController::export</default>
