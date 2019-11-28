@@ -8,6 +8,7 @@ use Owp\OwpEntry\Entity\People;
 use Owp\OwpCore\Entity\User;
 use Owp\OwpEntry\Form\TeamType;
 use Owp\OwpEntry\Form\PeopleAddType;
+use Owp\OwpEntry\Form\PeopleUpdateType;
 use Symfony\Component\HttpFoundation\Request;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\FormFactoryInterface;
@@ -64,8 +65,22 @@ class PeopleService {
         }
     }
 
-    public function update(People $people)
+    public function update(Request $request, People $people)
     {
+        if (!$this->security->isGranted('update', $people)) {
+            throw new AccessDeniedException();
+        }
 
+        $form = $this->formFactory->create(PeopleUpdateType::class, $people);
+
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $this->em->persist($people);
+            $this->em->flush();
+
+            $this->session->getFlashBag()->add('primary', 'L\'inscription a été prise en compte.');
+        }
+
+        return $form;
     }
 }

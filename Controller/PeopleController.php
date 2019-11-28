@@ -12,16 +12,18 @@ use Owp\OwpEntry\Service\EntryService;
 use Owp\OwpEvent\Service\EventService;
 use Owp\OwpEntry\Service\PeopleService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Symfony\Component\HttpFoundation\Request;
 
 class PeopleController extends Controller
 {
-    public function update(People $people, PeopleService $peopleService): Response
+    public function update(Request $request, People $people, PeopleService $peopleService): Response
     {
-        $peopleService->update($people);
+        $form = $peopleService->update($request, $people);
 
-        return $this->redirectToRoute('owp_event_show', array(
-            'slug' => $people->getEvent()->getSlug(),
-        ));
+        return $this->render('@OwpEntry/Form/form__people_update.html.twig', [
+            'form' => $form->createView(),
+            'people' => $people
+        ]);
     }
 
     public function delete(People $people, PeopleService $peopleService): Response
