@@ -12,7 +12,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Owp\OwpCore\Repository\BaseRepository;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
-class PeopleType extends AbstractType
+class PeopleAddType extends AbstractType
 {
     private $router;
 

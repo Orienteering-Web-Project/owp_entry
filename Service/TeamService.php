@@ -7,7 +7,7 @@ use Owp\OwpEntry\Entity\Team;
 use Owp\OwpEntry\Entity\People;
 use Owp\OwpCore\Entity\User;
 use Owp\OwpEntry\Form\TeamType;
-use Owp\OwpEntry\Form\PeopleType;
+use Owp\OwpEntry\Form\PeopleAddType;
 use Symfony\Component\HttpFoundation\Request;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\FormFactoryInterface;

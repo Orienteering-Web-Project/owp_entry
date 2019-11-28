@@ -23,7 +23,7 @@ class TeamType extends AbstractType
     {
         $builder
             ->add('peoples', CollectionType::class, [
-                'entry_type' => PeopleType::class,
+                'entry_type' => PeopleAddType::class,
                 'entry_options' => ['label' => false]
             ])
             ->add('label', TextType::class, [
