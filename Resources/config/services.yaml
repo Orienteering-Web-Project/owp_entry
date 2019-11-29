@@ -9,10 +9,6 @@ services:
         resource: '../../*'
         exclude: '../../{DependencyInjection,Entity,Migrations,Tests,Kernel.php}'
 
-    service.entry:
-        class: Owp\OwpEntry\Service\EntryService
-        public: true
-
     service.people:
         class: Owp\OwpEntry\Service\PeopleService
         public: true
@@ -31,4 +27,12 @@ services:
 
     manager.entry.team:
         class: Owp\OwpEntry\Manager\TeamEntryManager
+        public: true
+
+    exporter.oe2010:
+        class: Owp\OwpEntry\Exporter\OE2010ExporterManager
+        public: true
+
+    exporter.pdf:
+        class: Owp\OwpEntry\Exporter\PdfExporterManager
         public: true
