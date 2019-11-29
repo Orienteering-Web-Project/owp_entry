@@ -3,23 +3,12 @@
 namespace Owp\OwpEntry\Manager;
 
 use Owp\OwpEvent\Entity\Event;
-use Owp\OwpEntry\Entity\Team;
-use Owp\OwpEntry\Entity\People;
-use Owp\OwpCore\Entity\User;
-use Owp\OwpCore\Entity\Club;
-use Owp\OwpEntry\Form\TeamAddType;
-use Owp\OwpEntry\Form\PeopleAddType;
-use Owp\OwpEntry\Form\ClubType;
 use Symfony\Component\HttpFoundation\Request;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Security\Core\Security;
-use Knp\Bundle\SnappyBundle\Snappy\Response\PdfResponse;
-use Symfony\Component\Routing\Exception\RouteNotFoundException;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Twig\Environment;
-use Knp\Snappy\Pdf;
 
 abstract class AbstractEntryManager
 {
@@ -27,16 +16,13 @@ abstract class AbstractEntryManager
     private $formFactory;
     private $session;
     private $security;
-    private $twig;
 
-    public function __construct(EntityManagerInterface $em, FormFactoryInterface $formFactory, SessionInterface $session, Security $security, Environment $twig, Pdf $pdf)
+    public function __construct(EntityManagerInterface $em, FormFactoryInterface $formFactory, SessionInterface $session, Security $security)
     {
         $this->em = $em;
         $this->formFactory = $formFactory;
         $this->session = $session;
         $this->security = $security;
-        $this->twig = $twig;
-        $this->pdf = $pdf;
     }
 
     public function getForm(Event $event, array $options = [])

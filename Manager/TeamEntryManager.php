@@ -5,30 +5,20 @@ namespace Owp\OwpEntry\Manager;
 use Owp\OwpEvent\Entity\Event;
 use Owp\OwpEntry\Entity\Team;
 use Owp\OwpEntry\Entity\People;
-use Owp\OwpCore\Entity\User;
-use Owp\OwpCore\Entity\Club;
 use Owp\OwpEntry\Form\TeamAddType;
-use Owp\OwpEntry\Form\PeopleAddType;
-use Owp\OwpEntry\Form\ClubType;
-use Symfony\Component\HttpFoundation\Request;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Security\Core\Security;
-use Knp\Bundle\SnappyBundle\Snappy\Response\PdfResponse;
-use Symfony\Component\Routing\Exception\RouteNotFoundException;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Twig\Environment;
-use Knp\Snappy\Pdf;
 use Owp\OwpEntry\Service\TeamService;
 
 class TeamEntryManager extends AbstractEntryManager
 {
     private $service;
 
-    public function __construct(EntityManagerInterface $em, FormFactoryInterface $formFactory, SessionInterface $session, Security $security, Environment $twig, Pdf $pdf, TeamService $service)
+    public function __construct(EntityManagerInterface $em, FormFactoryInterface $formFactory, SessionInterface $session, Security $security, TeamService $service)
     {
-        parent::__construct($em, $formFactory, $session, $security, $twig, $pdf);
+        parent::__construct($em, $formFactory, $session, $security);
 
         $this->service = $service;
     }

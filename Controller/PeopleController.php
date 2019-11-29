@@ -8,7 +8,6 @@ use Symfony\Component\Routing\Annotation\Route;
 use Owp\OwpEntry\Entity\People;
 use Owp\OwpEvent\Entity\Event;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
-use Owp\OwpEntry\Service\EntryService;
 use Owp\OwpEvent\Service\EventService;
 use Owp\OwpEntry\Service\PeopleService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
