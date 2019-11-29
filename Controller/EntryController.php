@@ -10,7 +10,7 @@ use Owp\OwpEvent\Entity\Event;
 use Owp\OwpCore\Entity\Club;
 use Symfony\Component\HttpFoundation\Request;
 use Owp\OwpEvent\Service\EventService;
-use Owp\OwpCore\Service\PeopleService;
+use Owp\OwpEntry\Service\PeopleService;
 
 class EntryController extends Controller
 {
