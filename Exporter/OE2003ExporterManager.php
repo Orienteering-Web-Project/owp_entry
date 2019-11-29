@@ -58,7 +58,7 @@ class OE2003ExporterManager extends AbstractExporterManager
 
         foreach($event->getPeoples() as $people) {
             $data[] = [
-                "N° dép.",
+                "",
                 !(empty($people->getBase())) ? $people->getBase()->getSi() : "", // Puce
                 !(empty($people->getBase())) ? $people->getBase()->getId() : "",
                 !(empty($people->getBase())) ? $people->getBase()->getLastName() : $people->getLastName(), // Nom
