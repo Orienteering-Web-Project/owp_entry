@@ -31,7 +31,7 @@ use Sonata\Exporter\Writer\XmlWriter;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Sonata\Exporter\Source\ArraySourceIterator;
 
-class OE2010ExporterManager extends AbstractExporterManager
+class OE2003ExporterManager extends AbstractExporterManager
 {
     public function export(Event $event)
     {
@@ -47,7 +47,7 @@ class OE2010ExporterManager extends AbstractExporterManager
 
         return new StreamedResponse($callback, 200, [
             'Content-Type' => $contentType,
-            'Content-Disposition' => sprintf('attachment; filename="%s"', 'export_oe2010.csv'),
+            'Content-Disposition' => sprintf('attachment; filename="%s"', 'export_oe2003.csv'),
         ]);
     }
 
@@ -58,21 +58,16 @@ class OE2010ExporterManager extends AbstractExporterManager
 
         foreach($event->getPeoples() as $people) {
             $data[] = [
-                "",
-                "",
-                "",
+                "N° dép.",
                 !(empty($people->getBase())) ? $people->getBase()->getSi() : "", // Puce
                 !(empty($people->getBase())) ? $people->getBase()->getId() : "",
                 !(empty($people->getBase())) ? $people->getBase()->getLastName() : $people->getLastName(), // Nom
                 !(empty($people->getBase())) ? $people->getBase()->getFirstName() : $people->getFirstName(), // Prénom
                 "", // Né
                 "", // Sexe
-                0,
-                0,
                 "",
                 "",
                 "",
-                0,
                 "",
                 "",
                 "",
@@ -80,23 +75,9 @@ class OE2010ExporterManager extends AbstractExporterManager
                 !(empty($people->getBase())) ? $people->getBase()->getClub()->getName() : "10000PO", // Nom club
                 !(empty($people->getBase())) ? $people->getBase()->getClub()->getLabel() : "Pass-Orientation", // Nom complet
                 "FR", // Nationalité
-                "",
-                "",
-                "", // Numéro de catégorie
-                "", // Libellé de catégorie
-                "", // Libellé de catégorie
-                "",
-                "",
-                "",
-                "",
-                "",
-                "",
-                "",
-                "",
-                "",
-                "",
-                "",
-                "",
+                "", // Numéro catégorie
+                "", // Libellé catégorie
+                "", // libellé catégorie
                 "",
                 "",
                 "",
@@ -124,63 +105,44 @@ class OE2010ExporterManager extends AbstractExporterManager
     private function header()
     {
         return [
-            "OE0001",
-            "Doss.",
-            "X Nr",
-            "Nr puce",
+            "N° dép.",
+            "Puce",
             "Ident. base de données",
-            "NOM",
+            "Nom",
             "Prénom",
             "Né",
             "S",
             "Plage",
             "nc",
-            "H. Dép.",
+            "Départ",
             "Arrivée",
             "Temps",
-            "Classer",
-            "Bonification -",
-            "Pénalité +",
-            "Commentaire",
-            "Nr club",
-            "Nom club",
+            "Evaluation",
+            "N° club",
+            "Nom",
             "Ville",
             "Nat",
-            "Groupe",
-            "Région",
-            "Nr catg.",
-            "Catg. Court",
-            "Catg. Long",
-            "Nr Catg. Inscription",
-            "Catégorie d\'inscription (court)",
-            "Catégorie d\'inscription (long)",
-            "Ranking",
-            "Points Ranking",
+            "N° cat.",
+            "Court",
+            "Long",
             "Num1",
             "Num2",
             "Num3",
             "Text1",
             "Text2",
             "Text3",
-            "Adr. nom de famille",
-            "Adr. prénom",
+            "Adr. nom",
             "Rue",
             "Ligne2",
-            "CP",
-            "Adr. ville",
+            "Code Post.",
+            "Ville",
             "Tél.",
-            "Mobile",
             "Fax",
-            "Email",
+            "E-mail",
+            "Id/Club",
             "Louée",
-            "Tarif inscription",
-            "Payé",
-            "Equipe",
-            "Nr circuit",
-            "Circuit",
-            "km",
-            "m",
-            "Postes du circuit"
+            "Engagement",
+            "Payé"
         ];
     }
 

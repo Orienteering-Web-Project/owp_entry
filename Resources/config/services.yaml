@@ -33,6 +33,10 @@ services:
         class: Owp\OwpEntry\Exporter\OE2010ExporterManager
         public: true
 
+    exporter.oe2003:
+        class: Owp\OwpEntry\Exporter\OE2003ExporterManager
+        public: true
+
     exporter.pdf:
         class: Owp\OwpEntry\Exporter\PdfExporterManager
         public: true
