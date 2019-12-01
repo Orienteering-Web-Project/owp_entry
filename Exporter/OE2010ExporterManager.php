@@ -135,7 +135,7 @@ class OE2010ExporterManager extends AbstractExporterManager
             "S",
             "Plage",
             "nc",
-            "H. Dép.",
+            "Départ",
             "Arrivée",
             "Temps",
             "Classer",
